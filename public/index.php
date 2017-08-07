@@ -1,5 +1,4 @@
 <?php
-
 if (PHP_SAPI == 'cli-server') {
     // To help the built-in PHP dev server, check if the request was actually for
     // something which should probably be served as a static file
@@ -22,25 +21,20 @@ $app = new \Slim\App($settings);
 require __DIR__ . '/../src/dependencies.php';
 
 // Register middleware
-require __DIR__ . '/../src/middleware.php';
+// require __DIR__ . '/../src/middleware.php';
 
 // model and action
-// require __DIR__ . "/../src/model/*.php";
-// require __DIR__ . "/../src/route/action/*.class.php";
 foreach (glob(__DIR__ . "/../src/model/*.php") as $path) {
-    // var_dump($path);
     require_once $path;
 }
 foreach (glob(__DIR__ . "/../src/action/Base*.php") as $path) {
-    // var_dump($path);
     require_once $path;
 }
 foreach (glob(__DIR__ . "/../src/action/*.php") as $path) {
-    // var_dump($path);
     require_once $path;
 }
 
-// Register routes
+// // Register routes
 require __DIR__ . '/../src/route/admin.route.php';
 
 // Run app

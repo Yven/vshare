@@ -4,7 +4,7 @@ namespace Src\Action;
 
 class BaseAction
 {
-    private const _ERR_MSG= [
+    private $_ERR_MSG= [
         400 => "Problems parsing JSON",
         401 => "Bad credentials",
         403 => "Counldn't access this resource",
@@ -32,23 +32,20 @@ class BaseAction
      * @return ResponseInterface|null
      */
     protected function successResponse($info, $header = array()){
-        var_dump($this->_response->withJson($info, 200));
-        // 响应头设置
-        // $this->_response = $this->_response->withStatus(200);
         // 设置响应体
-        // $this->_response = $this->_response->getBody()->write(json_encode($info));
-        // if (!$header) {
-        //     return $this->_response;
-        // } elseif (is_array($header)) {
-        //     foreach ($header as $key => $value) {
-        //         $this->_response = $this->_response->withHeader($key, $value);
-        //         // var_dump($this->_response);
-        //     }
-        //     return $this->_response;
-        // } else {
-        //     // 响应头格式错误
-        //     return null;
-        // }
+        $this->_response = $this->_response->withJson($info, 200);
+        // 自定义响应头设置
+        if (!$header) {
+            return $this->_response;
+        } elseif (is_array($header)) {
+            foreach ($header as $key => $value) {
+                $this->_response = $this->_response->withHeader($key, $value);
+            }
+            return $this->_response;
+        } else {
+            // 响应头格式错误
+            return null;
+        }
     }
 
     /**

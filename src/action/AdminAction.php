@@ -26,9 +26,8 @@ class AdminAction extends BaseAction
             $res = $this->admin->vFrom()->where("id", $query);
             foreach ($res as $value) {
                 unset($value["passwd"]);
-                // return $this->successResponse($value);
-                return $this->successResponse($value, ["Content-Type" => "application/json;charset=utf-8"]);
             }
+            return $this->successResponse($value);
         } else {
             return $this->errorResponse(422);
         }

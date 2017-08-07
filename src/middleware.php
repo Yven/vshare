@@ -11,10 +11,9 @@
 // e.g: $app->add(new \Slim\Csrf\Guard);
 
 $app->add(function($request, $response, $next){
-
     // $response->getBody()->write("before");
-    $next($request, $response);
+    // $response = $next($request, $response);
     // $response->getBody()->write("after");
 
-    return $response;
+    // return $response;
 });
