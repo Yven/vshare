@@ -34,7 +34,7 @@ foreach (glob(__DIR__ . "/../src/action/*.php") as $path) {
     require_once $path;
 }
 
-// // Register routes
+// Register routes
 require __DIR__ . '/../src/route/admin.route.php';
 
 // Run app

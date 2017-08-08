@@ -16,14 +16,6 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
 
-        // DataBase setting
-        // 'db' => [
-        //     'host' => '127.0.0.1',
-        //     'user' => 'root',
-        //     'pass' => '0212',
-        //     'dbname' => 'vshare'
-        // ],
-
         // JWT token setting
         "jwt" => [
             "aud" => "www.yvenmediashare.com",

@@ -14,17 +14,17 @@ class Admin extends \FluentPDO
         'dbname' => 'vshare'
     ];
 
-    private $_prefix = 'v_';
-    private $_table;
+    // private $_prefix = 'v_';
+    // private $_table;
 
     public function __construct(){
         // 初始化FPDO
         $pdo = new \PDO("mysql:host=".$this->setting['host'].";dbname=".$this->setting['dbname'], $this->setting['user'], $this->setting['pass']);
         $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-        parent::__construct($pdo);
-        $reflection = new \ReflectionClass($this);
-        $this->_table = strtolower($reflection->getShortName());
+        parent::__construct($pdo, "v_");
+        // $reflection = new \ReflectionClass($this);
+        // $this->_table = strtolower($reflection->getShortName());
     }
 
     public function getTable(){

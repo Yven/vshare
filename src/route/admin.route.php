@@ -5,8 +5,7 @@ $app->group("/auth", function () {
     // login
     $this->post("", function ($request, $response) {
         $admin = new \Src\Action\AdminAction($request, $response);
-        $response = $admin->save();
-        return $response;
+        return $admin->login();
     });
 
     // logout
