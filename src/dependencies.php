@@ -13,6 +13,8 @@ $container['logger'] = function ($c) {
 };
 
 // CSRF Token
-$container['csrf'] = function($c){
-    return new \Slim\Csrf\Guard;
-};
+// $container['csrf'] = function($c){
+    // return new \Slim\Csrf\Guard;
+// };
+
+// $container['Admin'] =

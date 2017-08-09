@@ -1,25 +1,17 @@
 <?php
 
 
-$app->group("/auth", function () {
+$app->group('/auth', function () {
     // login
-    $this->post("", function ($request, $response) {
-        $admin = new \Src\Action\AdminAction($request, $response);
-        return $admin->login();
-    });
+    $this->post('', "\Src\Action\AdminAction:login");
 
     // get admin info
-    $this->get("", function ($request, $response) {
-        $admin = new \Src\Action\AdminAction($request, $response);
-        return $admin->getInfo();
-    });
+    $this->get('', "\Src\Action\AdminAction:getInfo");
 
     // logout
-    $this->delete("", function ($request, $response) {
-        $response->getBody()->write("you want to logout");
-    });
+    $this->delete('', "\Src\Action\AdminAction:logout");
 });
 
 // admin operation
-$app->group("/admin", function () {
+$app->group('/admin', function () {
 });
