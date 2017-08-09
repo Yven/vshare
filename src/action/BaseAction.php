@@ -58,7 +58,8 @@ class BaseAction
             return $this->_response;
         } elseif (is_array($header)) {
             foreach ($header as $key => $value) {
-                $this->_response = $this->_response->withHeader($key, $value);
+                $this->_response = $this->_response->withAddedHeader($key, $value);
+                // var_dump($this->_response);
             }
             return $this->_response;
         } else {

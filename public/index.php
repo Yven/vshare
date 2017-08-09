@@ -9,13 +9,18 @@ if (PHP_SAPI == 'cli-server') {
     }
 }
 
+define("SETTING_PATH", __DIR__ . "/../src/settings.php");
+
+
+
 require __DIR__ . '/../vendor/autoload.php';
 
 session_start();
 
 // Instantiate the app
-$settings = require __DIR__ . '/../src/settings.php';
-$app = new \Slim\App($settings);
+require __DIR__ . '/../src/Config.php';
+\Src\Config::load(SETTING_PATH);
+$app = new \Slim\App(\Src\Config::get());
 
 // Set up dependencies
 require __DIR__ . '/../src/dependencies.php';
