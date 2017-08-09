@@ -1,4 +1,4 @@
-!/vendor/lichtner/*
 /vendor/*
+!/vendor/lichtner/*
 /logs/*
 /public/.htaccess
