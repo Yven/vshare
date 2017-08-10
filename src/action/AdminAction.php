@@ -21,7 +21,7 @@ class AdminAction extends BaseAction
     }
 
     /**
-     * 登录检测.
+     * login
      *
      * @return Response
      */
