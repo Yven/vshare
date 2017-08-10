@@ -9,7 +9,7 @@ class BaseAction
      *
      * @var array
      */
-    protected $_ERR_MSG = [
+    private $_ERR_MSG = [
         400 => 'Problems parsing JSON',
         401 => 'Bad credentials',
         403 => "Counldn't access this resource",
