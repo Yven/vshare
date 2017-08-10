@@ -8,6 +8,7 @@ use Src\Config;
 class Admin extends \FluentPDO
 {
     private $_code;
+    private $_jwt;
     private $_message = "";
     private $_rootLevel = [
         '7' => 'Administrator',
@@ -36,13 +37,22 @@ class Admin extends \FluentPDO
     }
 
     /**
+     * get JWT token
+     *
+     * @return string
+     */
+    public function getJWT(){
+        return $this->_jwt;
+    }
+
+    /**
      * set JWT's format.
      *
      * @param array  $data
      * @param string $token
      * @param string $key
      *
-     * @return string
+     * @return void
      */
     private function SetJWT($data, $token, $key)
     {
@@ -53,7 +63,7 @@ class Admin extends \FluentPDO
             'logInAs' => $this->_rootLevel[$data['root']],
         ]);
 
-        return JWT::encode($token, $key);
+        $this->_jwt = JWT::encode($token, $key);
     }
 
     /**
@@ -81,7 +91,7 @@ class Admin extends \FluentPDO
         unset($res['passwd']);
 
         // set jwt token
-        $jwt = $this->setJWT($res, Config::get('jwt'), Config::get('secret'));
+        $this->setJWT($res, Config::get('jwt'), Config::get('secret'));
         // set root level message
         $res['root'] = $this->_rootLevel[$res['root']];
 
@@ -95,6 +105,11 @@ class Admin extends \FluentPDO
      * @return array|null
      */
     public function getInfo ($token) {
+        // token do not exist
+        if (empty($token)) {
+            $this->_code = 401;
+            return null;
+        }
         // decode the token
         $jwt = (array) JWT::decode($token, Config::get('secret'), array('HS256'));
 

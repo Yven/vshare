@@ -16,13 +16,16 @@ class AdminAction extends BaseAction
         $this->_admin = new Admin();
     }
 
-    public function signup()
+    public function signup($request, $response, $args)
     {
     }
 
     /**
      * login
      *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
      * @return Response
      */
     public function login($request, $response, $args)
@@ -35,19 +38,22 @@ class AdminAction extends BaseAction
         // get result status
         $status = $this->_admin->getStatus();
         if (is_null($res)) {
-            return $this->errorResponse(
+            return $this->error(
                 $status['code'],
                 empty($status['message']) ? $this->_ERR_MSG[$status['code']] : $status['message']
             );
         } else {
-            return $this->successResponse($res);
+            $this->cookie($this->_container['newcookie'], ["token" => $this->_admin->getJWT()]);
+            return $this->success($res);
         }
-
     }
 
     /**
-     * get the admin info that has been logined.
+     * get logged admin info
      *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
      * @return Response
      */
     public function getInfo($request, $response, $args)
@@ -55,27 +61,16 @@ class AdminAction extends BaseAction
         // init the parent class
         parent::__construct($response);
         // get info
-        $res = $this->_admin->getInfo($_COOKIE['token']);
+        $res = $this->_admin->getInfo($this->_container['cookie']->get("token"));
 
         $status = $this->_admin->getStatus();
         if (is_null($res)) {
-            return $this->errorResponse(
+            return $this->error(
                 $status['code'],
                 empty($status['message']) ? $this->_ERR_MSG[$status['code']] : $status['message']
             );
         } else {
-            return $this->successResponse($res);
-        }
-    }
-
-    /**
-     * admin logout
-     *
-     * @return Rsponse
-     */
-    public function logout () {
-        if (isset($_COOKIE['token'])) {
-            unset($_COOKIE['token']);
+            return $this->success($res);
         }
     }
 }

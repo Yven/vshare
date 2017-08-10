@@ -17,4 +17,10 @@ $container['logger'] = function ($c) {
     // return new \Slim\Csrf\Guard;
 // };
 
-// $container['Admin'] =
+$container['newcookie'] = function ($c) {
+    return new \Slim\Http\Cookies;
+};
+
+$container['cookie'] = function ($c) {
+    return new \Slim\Http\Cookies($c->get('request')->getCookieParams());
+};
