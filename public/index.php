@@ -25,7 +25,10 @@ $app = new \Slim\App(\Src\Config::get());
 require __DIR__.'/../src/dependencies.php';
 
 // Register middleware
-// require __DIR__ . '/../src/middleware.php';
+require __DIR__ . '/../src/middleware.php';
+
+// Register the common class
+require __DIR__ . '/../src/Common.php';
 
 // model and action
 foreach (glob(__DIR__.'/../src/model/*.php') as $path) {

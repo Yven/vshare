@@ -9,7 +9,7 @@ class Admin extends \FluentPDO
 {
     private $_code;
     private $_jwt;
-    private $_message = "";
+    private $_message = '';
     private $_rootLevel = [
         '7' => 'Administrator',
         '6' => 'Super Man',
@@ -25,23 +25,25 @@ class Admin extends \FluentPDO
     }
 
     /**
-     * get the result info
+     * get the result info.
      *
      * @return array
      */
-    public function getStatus(){
+    public function getStatus()
+    {
         return [
-            "code" => $this->_code,
-            "message" => $this->_message
+            'code' => $this->_code,
+            'message' => $this->_message,
         ];
     }
 
     /**
-     * get JWT token
+     * get JWT token.
      *
      * @return string
      */
-    public function getJWT(){
+    public function getJWT()
+    {
         return $this->_jwt;
     }
 
@@ -51,8 +53,6 @@ class Admin extends \FluentPDO
      * @param array  $data
      * @param string $token
      * @param string $key
-     *
-     * @return void
      */
     private function SetJWT($data, $token, $key)
     {
@@ -67,16 +67,19 @@ class Admin extends \FluentPDO
     }
 
     /**
-     * check the identity
+     * check the identity.
      *
      * @param array $data
+     *
      * @return array|null
      */
-    public function login ($data) {
+    public function login($data)
+    {
         // data exist
         if (!isset($data['username']) || empty($data['username']) ||
             !isset($data['passwd']) || empty($data['passwd'])) {
             $this->_code = 400;
+
             return null;
         }
         // get real data
@@ -85,7 +88,8 @@ class Admin extends \FluentPDO
         // admin exist then password verify success
         if (empty($res) || !password_verify($data['passwd'], $res['passwd'])) {
             $this->_code = 422;
-            $this->_message = "Username or Password Error!";
+            $this->_message = 'Username or Password Error!';
+
             return null;
         }
         unset($res['passwd']);
@@ -102,12 +106,15 @@ class Admin extends \FluentPDO
      * get the admin info that has been logined.
      *
      * @param string $token
+     *
      * @return array|null
      */
-    public function getInfo ($token) {
+    public function getInfo($token)
+    {
         // token do not exist
         if (empty($token)) {
             $this->_code = 401;
+
             return null;
         }
         // decode the token
@@ -118,11 +125,13 @@ class Admin extends \FluentPDO
         // admin do not exist OR iss error OR overdue
         if (empty($res) || $jwt['iss'] !== Config::get('jwt')['iss'] || $jwt['exp'] < $_SERVER['REQUEST_TIME']) {
             $this->_code = 401;
+
             return null;
         }
 
         unset($res['passwd']);
         $res['root'] = $jwt['logInAs'];
+
         return $res;
     }
 }

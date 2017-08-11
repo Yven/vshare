@@ -3,7 +3,6 @@
 namespace Src\Action;
 
 use Src\Model\Admin;
-use Src\Config;
 
 class AdminAction extends BaseAction
 {
@@ -11,7 +10,8 @@ class AdminAction extends BaseAction
 
     protected $_container;
 
-    public function __construct(\Slim\Container $container) {
+    public function __construct(\Slim\Container $container)
+    {
         $this->_container = $container;
         $this->_admin = new Admin();
     }
@@ -21,11 +21,12 @@ class AdminAction extends BaseAction
     }
 
     /**
-     * login
+     * login.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
-     * @param array $args
+     * @param array    $args
+     *
      * @return Response
      */
     public function login($request, $response, $args)
@@ -43,17 +44,19 @@ class AdminAction extends BaseAction
                 empty($status['message']) ? $this->_ERR_MSG[$status['code']] : $status['message']
             );
         } else {
-            $this->cookie($this->_container['newcookie'], ["token" => $this->_admin->getJWT()]);
+            $this->cookie($this->_container['newcookie'], ['token' => $this->_admin->getJWT()]);
+
             return $this->success($res);
         }
     }
 
     /**
-     * get logged admin info
+     * get logged admin info.
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Response $response
-     * @param array $args
+     * @param array    $args
+     *
      * @return Response
      */
     public function getInfo($request, $response, $args)
@@ -61,7 +64,7 @@ class AdminAction extends BaseAction
         // init the parent class
         parent::__construct($response);
         // get info
-        $res = $this->_admin->getInfo($this->_container['cookie']->get("token"));
+        $res = $this->_admin->getInfo($this->_container['cookie']->get('token'));
 
         $status = $this->_admin->getStatus();
         if (is_null($res)) {

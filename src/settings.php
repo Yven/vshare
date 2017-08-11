@@ -1,4 +1,5 @@
 <?php
+
 return [
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
@@ -7,27 +8,23 @@ return [
         // Monolog settings
         'logger' => [
             'name' => 'slim-app',
-            'path' => __DIR__ . '/../logs/app.log',
+            'path' => __DIR__.'/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
     ],
-    "www" => [
+    'www' => [
         // database setting
-        "db" => [
+        'db' => [
             'host' => '127.0.0.1',
             'user' => 'root',
             'pass' => '0212',
             'dbname' => 'vshare',
-            'prefix' => 'v_'
+            'prefix' => 'v_',
         ],
         // JWT token setting
-        "secret" => "yvenchang",
-        "jwt" => [
-            "iss" => "www.yvenchang.xyz",
-            // "iat" => 1416797419,
-            // "exp" => 1448333419,
-            // "sub" => "jrocket@example.com",
-            // "logInAs" => "admin"
-        ]
-    ]
+        'secret' => 'yvenchang',
+        'jwt' => [
+            'iss' => 'www.yvenchang.xyz',
+        ],
+    ],
 ];

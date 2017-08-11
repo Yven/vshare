@@ -4,7 +4,17 @@
 $app->group('/auth', function () {
     // login
     $this->post('', "\Src\Action\AdminAction:login");
+
+    // csrf tokem
 });
+
+$app->get('/csrf', "\Src\Common:csrf");
+
+
+$app->get('/test', function ($request, $response) {
+    return $response->write("Csrf Success");
+});
+
 
 // admin operation
 $app->group('/admin', function () {

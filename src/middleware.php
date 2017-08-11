@@ -1,5 +1,8 @@
 <?php
 // Application middleware
 
-$app->add(function($request, $response, $next){
-});
+// add csrf middleware
+$app->add($container->get('csrf'));
+
+// $app->add(function ($request, $response, $next) {
+// });

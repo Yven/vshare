@@ -32,11 +32,12 @@ class BaseAction
     private $_response;
 
     /**
-     * init Response and help URL
+     * init Response and help URL.
      *
      * @param \Psr\Http\Message\ResponseInterface $response
      */
-    public function __construct(\Psr\Http\Message\ResponseInterface $response) {
+    public function __construct(\Psr\Http\Message\ResponseInterface $response)
+    {
         // 对操作请求进行，并返回响应
         $this->_response = $response;
         // 初始化帮助地址
@@ -44,35 +45,36 @@ class BaseAction
     }
 
     /**
-     * get Response
+     * get Response.
      *
      * @return Response
      */
-    public function getResponse(){
+    public function getResponse()
+    {
         return $this->_response;
     }
 
     /**
-     * setting set-cookie header
+     * setting set-cookie header.
      *
      * @param \Slim\Http\Cookies $cookie
-     * @param array|string $value
-     * @param string $expires
-     * @param boolean $httponly
-     * @return void
+     * @param array|string       $value
+     * @param string             $expires
+     * @param bool               $httponly
      */
-    protected function cookie($cookie, $value, $expires = null, $httponly = false){
+    protected function cookie($cookie, $value, $expires = null, $httponly = false)
+    {
         if (is_array($value)) {
             foreach ($value as $k => $v) {
                 $cookie->set($k, [
-                    "value" => $v,
-                    "path" => "/vshare2",
-                    "expires" => $expires,
-                    "httponly" => $httponly
+                    'value' => $v,
+                    'path' => '/vshare2',
+                    'expires' => $expires,
+                    'httponly' => $httponly,
                 ]);
             }
             foreach ($cookie->toHeaders() as $c) {
-                $this->_response = $this->_response->withAddedHeader("Set-Cookie", $c);
+                $this->_response = $this->_response->withAddedHeader('Set-Cookie', $c);
             }
         }
     }
@@ -80,14 +82,15 @@ class BaseAction
     /**
      * 正确响应设置.
      *
-     * @param array $data   正确数据
+     * @param array $data 正确数据
      *
      * @return ResponseInterface|null
      */
-    protected function success($data)
+    protected function success($data, $code)
     {
         // 设置响应体
-        $this->_response = $this->_response->withJson($data, 200);
+        $this->_response = $this->_response->withJson($data, $code);
+
         return $this->_response;
     }
 
