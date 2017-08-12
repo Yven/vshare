@@ -86,7 +86,7 @@ class BaseAction
      *
      * @return ResponseInterface|null
      */
-    protected function success($data, $code)
+    protected function success($data, $code = 200)
     {
         // 设置响应体
         $this->_response = $this->_response->withJson($data, $code);

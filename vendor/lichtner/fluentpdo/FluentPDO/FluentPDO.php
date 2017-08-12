@@ -35,7 +35,11 @@ class FluentPDO
     /** @var bool|callback */
     public $debug;
 
+    /** @var string */
     protected $table;
+
+    /** @var array */
+    protected $field;
 
     /**
      * FluentPDO constructor.
@@ -51,6 +55,7 @@ class FluentPDO
         $this->structure = $structure;
         $reflection = new \ReflectionClass($this);
         $this->table = $db['prefix'] . strtolower($reflection->getShortName());
+        $this->field = $this->pdo->query("DESC " . $this->table)->fetchAll(PDO::FETCH_COLUMN);
     }
 
     /**
@@ -164,6 +169,24 @@ class FluentPDO
      */
     public function close() {
         $this->pdo = null;
+    }
+
+    /**
+     * get table all field name
+     *
+     * @return void
+     */
+    public function getField() {
+        return $this->field;
+    }
+
+    /**
+     * filte the disabled field
+     *
+     * @param boolean $field
+     * @return void
+     */
+    public function field($field = true) {
     }
 
 }

@@ -30,11 +30,11 @@ require __DIR__ . '/../src/middleware.php';
 // Register the common class
 require __DIR__ . '/../src/Common.php';
 
+// Register base class
+require_once __DIR__ . '/../src/model/Model.php';
+require_once __DIR__ . '/../src/action/BaseAction.php';
 // model and action
 foreach (glob(__DIR__.'/../src/model/*.php') as $path) {
-    require_once $path;
-}
-foreach (glob(__DIR__.'/../src/action/Base*.php') as $path) {
     require_once $path;
 }
 foreach (glob(__DIR__.'/../src/action/*.php') as $path) {

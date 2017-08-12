@@ -12,12 +12,24 @@ class AdminAction extends BaseAction
 
     public function __construct(\Slim\Container $container)
     {
+        // init the parent class
+        parent::__construct($container->get('response'));
         $this->_container = $container;
         $this->_admin = new Admin();
     }
 
     public function signup($request, $response, $args)
     {
+        try{
+            $res = $this->_admin->signup($request->getParsedBody());
+        } catch (\Exception $e) {
+            return $this->error(
+                $e->getCode(),
+                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
+            );
+        }
+
+        return $this->success($res, 201);
     }
 
     /**
@@ -31,23 +43,19 @@ class AdminAction extends BaseAction
      */
     public function login($request, $response, $args)
     {
-        // init the parent class
-        parent::__construct($response);
         // check the user's info
-        $res = $this->_admin->login($request->getParsedBody());
-
-        // get result status
-        $status = $this->_admin->getStatus();
-        if (is_null($res)) {
+        try{
+            $res = $this->_admin->login($request->getParsedBody());
+        } catch (\Exception $e) {
             return $this->error(
-                $status['code'],
-                empty($status['message']) ? $this->_ERR_MSG[$status['code']] : $status['message']
+                $e->getCode(),
+                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
             );
-        } else {
-            $this->cookie($this->_container['newcookie'], ['token' => $this->_admin->getJWT()]);
-
-            return $this->success($res);
         }
+
+        // success
+        $this->cookie($this->_container['newcookie'], ['token' => $this->_admin->getJWT()]);
+        return $this->success($res);
     }
 
     /**
@@ -61,19 +69,16 @@ class AdminAction extends BaseAction
      */
     public function getInfo($request, $response, $args)
     {
-        // init the parent class
-        parent::__construct($response);
         // get info
-        $res = $this->_admin->getInfo($this->_container['cookie']->get('token'));
-
-        $status = $this->_admin->getStatus();
-        if (is_null($res)) {
+        try {
+            $res = $this->_admin->getInfo($this->_container['cookie']->get('token'));
+        } catch (\Expcetion $e) {
             return $this->error(
-                $status['code'],
-                empty($status['message']) ? $this->_ERR_MSG[$status['code']] : $status['message']
+                $e->getCode(),
+                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
             );
-        } else {
-            return $this->success($res);
         }
+
+            return $this->success($res);
     }
 }

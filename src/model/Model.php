@@ -2,33 +2,33 @@
 
 namespace Src\Model;
 
-class Model
+use Src\Config;
+
+class Model extends \FluentPDO
 {
-    private $_query;
-
-
-    public function select(){
-        $this->_query = "select ";
-        return $this;
+    public function __construct()
+    {
+        // 初始化FPDO
+        parent::__construct(Config::get('db'));
+        $this->setDefault();
     }
 
-    public function where($map){
-        foreach ($map as $field => $del) {
-            foreach ($del as $opera => $value) {
-                $q = '`' . $field . '` ' . $opera . ' ' . $value . ' ';
+    /**
+     * get the fields
+     *
+     * @return void
+     */
+    private function setDefault()
+    {
+        if (isset($this->_default) || empty($this->_default)) {
+            foreach ($this->getTableField() as $value) {
+                // if is pair key or the value has been defined
+                if ($value == "id" || array_key_exists($value, $this->_default)) {
+                    continue;
+                } else {
+                    $this->_default[$value] = '';
+                }
             }
         }
-
-        $this->_query = "";
     }
-
-    public function field($field){
-    }
-
-    public function from($table){
-    }
-
-    public function order($param, $rule){
-    }
-
 }

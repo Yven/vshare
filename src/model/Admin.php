@@ -5,11 +5,9 @@ namespace Src\Model;
 use Firebase\JWT\JWT;
 use Src\Config;
 
-class Admin extends \FluentPDO
+class Admin extends Model
 {
-    private $_code;
     private $_jwt;
-    private $_message = '';
     private $_rootLevel = [
         '7' => 'Administrator',
         '6' => 'Super Man',
@@ -17,24 +15,19 @@ class Admin extends \FluentPDO
         '4' => 'User',
     ];
 
+    /**
+     * the table's default field
+     *
+     * @var array
+     */
+    protected $_default = [
+        "root" => 4,
+        "favicon" => "http://"
+    ];
+
     public function __construct()
     {
-        // 初始化FPDO
-        parent::__construct(Config::get('db'));
-        $this->_code = 200;
-    }
-
-    /**
-     * get the result info.
-     *
-     * @return array
-     */
-    public function getStatus()
-    {
-        return [
-            'code' => $this->_code,
-            'message' => $this->_message,
-        ];
+        parent::__construct();
     }
 
     /**
@@ -67,6 +60,33 @@ class Admin extends \FluentPDO
     }
 
     /**
+     * sign up
+     *
+     * @param array $data
+     * @return array|null
+     */
+    public function signup($data)
+    {
+        // check data
+        if (!isset($data['username']) || empty($data['username']) ||
+            !isset($data['passwd']) || empty($data['passwd'])) {
+            throw new \Exception('', 400);
+        }
+
+        // if username has exist
+        if (empty($this->from()->where('username', $data['username'])->fetch())) {
+            throw new \Exception('username has exist!', 422);
+        }
+
+        // password disagree
+        if ($data['passwd2'] !== $data['passwd']) {
+            throw new \Exception("password disagree!", 422);
+        }
+
+        $res = $this->insertInto()->value($data)->execute();
+    }
+
+    /**
      * check the identity.
      *
      * @param array $data
@@ -78,19 +98,14 @@ class Admin extends \FluentPDO
         // data exist
         if (!isset($data['username']) || empty($data['username']) ||
             !isset($data['passwd']) || empty($data['passwd'])) {
-            $this->_code = 400;
-
-            return null;
+            throw new \Exception("", 400);
         }
         // get real data
         $res = $this->from()->where('username', $data['username'])->fetch();
 
         // admin exist then password verify success
         if (empty($res) || !password_verify($data['passwd'], $res['passwd'])) {
-            $this->_code = 422;
-            $this->_message = 'Username or Password Error!';
-
-            return null;
+            throw new \Exception('Username or Password Error!', 422);
         }
         unset($res['passwd']);
 
@@ -113,9 +128,7 @@ class Admin extends \FluentPDO
     {
         // token do not exist
         if (empty($token)) {
-            $this->_code = 401;
-
-            return null;
+            throw new \Exception("", 401);
         }
         // decode the token
         $jwt = (array) JWT::decode($token, Config::get('secret'), array('HS256'));
@@ -127,6 +140,7 @@ class Admin extends \FluentPDO
             $this->_code = 401;
 
             return null;
+            throw new \Exception("", 401);
         }
 
         unset($res['passwd']);
