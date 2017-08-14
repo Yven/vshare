@@ -16,14 +16,17 @@ class Admin extends Model
     ];
 
     /**
-     * the table's default field
+     * the table's default field.
      *
      * @var array
      */
     protected $_default = [
-        "root" => 4,
-        "favicon" => "http://"
+        'root' => 4,
+        'favicon' => 'http://',
     ];
+
+    protected $_autoTime = 'create_at';
+    protected $_autoUpdata = 'update_at';
 
     public function __construct()
     {
@@ -60,9 +63,10 @@ class Admin extends Model
     }
 
     /**
-     * sign up
+     * sign up.
      *
      * @param array $data
+     *
      * @return array|null
      */
     public function signup($data)
@@ -74,16 +78,27 @@ class Admin extends Model
         }
 
         // if username has exist
-        if (empty($this->from()->where('username', $data['username'])->fetch())) {
+        if (!empty($this->from()->where('username', $data['username'])->fetch())) {
             throw new \Exception('username has exist!', 422);
         }
 
         // password disagree
         if ($data['passwd2'] !== $data['passwd']) {
-            throw new \Exception("password disagree!", 422);
+            throw new \Exception('password disagree!', 422);
         }
 
-        $res = $this->insertInto()->value($data)->execute();
+        // password encry
+        $data['passwd'] = password_hash($data['passwd'], PASSWORD_DEFAULT);
+        var_dump($this->_default);
+
+        try {
+            $res = $this->insertInto()->values($data)->execute();
+        } catch (\PDOException $e) {
+            // sql query error, default 422 error code
+            throw new \Exception(explode(': ', $e->getMessage(), 2)[1], 422);
+        }
+
+        return $res;
     }
 
     /**
@@ -98,7 +113,7 @@ class Admin extends Model
         // data exist
         if (!isset($data['username']) || empty($data['username']) ||
             !isset($data['passwd']) || empty($data['passwd'])) {
-            throw new \Exception("", 400);
+            throw new \Exception('', 400);
         }
         // get real data
         $res = $this->from()->where('username', $data['username'])->fetch();
@@ -117,6 +132,10 @@ class Admin extends Model
         return $res;
     }
 
+    public function updateInfo()
+    {
+    }
+
     /**
      * get the admin info that has been logined.
      *
@@ -128,7 +147,7 @@ class Admin extends Model
     {
         // token do not exist
         if (empty($token)) {
-            throw new \Exception("", 401);
+            throw new \Exception('', 401);
         }
         // decode the token
         $jwt = (array) JWT::decode($token, Config::get('secret'), array('HS256'));
@@ -140,7 +159,7 @@ class Admin extends Model
             $this->_code = 401;
 
             return null;
-            throw new \Exception("", 401);
+            throw new \Exception('', 401);
         }
 
         unset($res['passwd']);

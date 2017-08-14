@@ -49,6 +49,8 @@ class FluentPDO
      */
     function __construct($db, FluentStructure $structure = null) {
         $this->pdo = new \PDO('mysql:host='.$db['host'].';dbname='.$db['dbname'], $db['user'], $db['pass']);
+        // set error format
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if (!$structure) {
             $structure = new FluentStructure();
         }

@@ -18,9 +18,18 @@ class AdminAction extends BaseAction
         $this->_admin = new Admin();
     }
 
+    /**
+     * signup.
+     *
+     * @param Request  $request
+     * @param Response $response
+     * @param array    $args
+     *
+     * @return Response
+     */
     public function signup($request, $response, $args)
     {
-        try{
+        try {
             $res = $this->_admin->signup($request->getParsedBody());
         } catch (\Exception $e) {
             return $this->error(
@@ -44,7 +53,7 @@ class AdminAction extends BaseAction
     public function login($request, $response, $args)
     {
         // check the user's info
-        try{
+        try {
             $res = $this->_admin->login($request->getParsedBody());
         } catch (\Exception $e) {
             return $this->error(
@@ -55,6 +64,7 @@ class AdminAction extends BaseAction
 
         // success
         $this->cookie($this->_container['newcookie'], ['token' => $this->_admin->getJWT()]);
+
         return $this->success($res);
     }
 
@@ -79,6 +89,6 @@ class AdminAction extends BaseAction
             );
         }
 
-            return $this->success($res);
+        return $this->success($res);
     }
 }

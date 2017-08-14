@@ -104,9 +104,13 @@ class BaseAction
      */
     protected function error($code, $info = null)
     {
-        return $this->_response->withJson([
-            'message' => is_null($info) ? (array_key_exists($code, $this->_ERR_MSG) ? $this->_ERR_MSG[$code] : 'Unknow Operation') : $info,
-            'documentation' => $this->_documentationURL,
-        ], $code);
+        if (!is_numeric($code) || $code < 200 || $code > 600) {
+            // undefined system error
+            $code = 400;
+        }
+            return $this->_response->withJson([
+                'message' => is_null($info) ? (array_key_exists($code, $this->_ERR_MSG) ? $this->_ERR_MSG[$code] : 'Unknow Operation') : $info,
+                'documentation' => $this->_documentationURL,
+            ], $code);
     }
 }
