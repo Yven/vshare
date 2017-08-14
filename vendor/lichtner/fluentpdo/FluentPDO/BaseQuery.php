@@ -23,6 +23,7 @@ abstract class BaseQuery implements IteratorAggregate
     protected $statements = array();
     /** @var array */
     protected $parameters = array();
+    protected $setField = false;
 
     /**
      * BaseQuery constructor.
@@ -356,6 +357,26 @@ abstract class BaseQuery implements IteratorAggregate
         $this->object = $object;
 
         return $this;
+    }
+
+    /**
+     * filter the undefine field
+     *
+     * @return void
+     */
+    public function field() {
+        $this->setField = true;
+
+        return $this;
+    }
+
+    /**
+     * return fpdo
+     *
+     * @return FluentPDO
+     */
+    protected function getFPDO(){
+        return $this->fpdo;
     }
 
 }

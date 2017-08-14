@@ -10,6 +10,11 @@ class AdminAction extends BaseAction
 
     protected $_container;
 
+    /**
+     * construct
+     *
+     * @param \Slim\Container $container
+     */
     public function __construct(\Slim\Container $container)
     {
         // init the parent class

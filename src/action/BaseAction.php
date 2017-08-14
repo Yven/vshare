@@ -84,7 +84,7 @@ class BaseAction
      *
      * @param array $data 正确数据
      *
-     * @return ResponseInterface|null
+     * @return ResponseInterface
      */
     protected function success($data, $code = 200)
     {
@@ -104,13 +104,14 @@ class BaseAction
      */
     protected function error($code, $info = null)
     {
+        // code is not the http status code
         if (!is_numeric($code) || $code < 200 || $code > 600) {
             // undefined system error
             $code = 400;
         }
-            return $this->_response->withJson([
-                'message' => is_null($info) ? (array_key_exists($code, $this->_ERR_MSG) ? $this->_ERR_MSG[$code] : 'Unknow Operation') : $info,
-                'documentation' => $this->_documentationURL,
-            ], $code);
+        return $this->_response->withJson([
+            'message' => is_null($info) ? (array_key_exists($code, $this->_ERR_MSG) ? $this->_ERR_MSG[$code] : 'Unknow Operation') : $info,
+            'documentation' => $this->_documentationURL,
+        ], $code);
     }
 }

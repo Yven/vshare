@@ -176,7 +176,7 @@ class FluentPDO
     /**
      * get table all field name
      *
-     * @return void
+     * @return array
      */
     public function getField() {
         return $this->field;
@@ -188,7 +188,7 @@ class FluentPDO
      * @param boolean $field
      * @return void
      */
-    public function field($field = true) {
-    }
+    // public function field($field = true) {
+    // }
 
 }

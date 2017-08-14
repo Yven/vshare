@@ -16,11 +16,13 @@ class Model extends \FluentPDO
 
     /**
      * get the fields.
+     *
+     * @return void
      */
     private function setDefault()
     {
         if (isset($this->_default) && !empty($this->_default) && is_array($this->_default)) {
-            foreach ($value as $k => $v) {
+            foreach ($this->_default as $k => $v) {
                 // if is not the field
                 if (!in_array($k, $this->field)) {
                     unset($value[$k]);

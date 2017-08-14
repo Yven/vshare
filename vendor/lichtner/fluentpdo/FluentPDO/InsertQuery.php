@@ -37,7 +37,7 @@ class InsertQuery extends BaseQuery
 
     /**
      * Execute insert query
-     * 
+     *
      * @param mixed $sequence
      *
      * @return integer last inserted id or false
@@ -75,6 +75,15 @@ class InsertQuery extends BaseQuery
      * @throws Exception
      */
     public function values($values) {
+        // set field
+        if ($this->setField) {
+            foreach ($values as $k => $v) {
+                if(!in_array($k, $this->getFPDO()->getField())) {
+                    unset($values[$k]);
+                }
+            }
+        }
+
         if (!is_array($values)) {
             throw new Exception('Param VALUES for INSERT query must be array');
         }

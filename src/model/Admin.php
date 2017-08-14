@@ -26,7 +26,7 @@ class Admin extends Model
     ];
 
     protected $_autoTime = 'create_at';
-    protected $_autoUpdata = 'update_at';
+    protected $_autoUpdate = 'update_at';
 
     public function __construct()
     {
@@ -89,16 +89,19 @@ class Admin extends Model
 
         // password encry
         $data['passwd'] = password_hash($data['passwd'], PASSWORD_DEFAULT);
-        var_dump($this->_default);
 
         try {
-            $res = $this->insertInto()->values($data)->execute();
+            $res = $this->insertInto()->field()->values(array_merge($this->_default, $data))->execute();
+            if ($res) {
+                $info = $this->from()->where('username', $data['username'])->fetch();
+                unset($info['passwd']);
+            }
         } catch (\PDOException $e) {
             // sql query error, default 422 error code
-            throw new \Exception(explode(': ', $e->getMessage(), 2)[1], 422);
+            throw new \Exception($e->getMessage(), 422);
         }
 
-        return $res;
+        return $info;
     }
 
     /**
