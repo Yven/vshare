@@ -33,6 +33,7 @@ require __DIR__ . '/../src/Common.php';
 // Register base class
 require_once __DIR__ . '/../src/model/Model.php';
 require_once __DIR__ . '/../src/action/BaseAction.php';
+require_once __DIR__ . '/../src/validate/Validate.php';
 // model and action
 foreach (glob(__DIR__.'/../src/model/*.php') as $path) {
     require_once $path;

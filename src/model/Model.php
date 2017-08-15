@@ -15,9 +15,17 @@ class Model extends \FluentPDO
     }
 
     /**
-     * get the fields.
+     * get default value.
      *
-     * @return void
+     * @return array
+     */
+    public function getDefault()
+    {
+        return $this->_default;
+    }
+
+    /**
+     * get the fields.
      */
     private function setDefault()
     {
@@ -34,9 +42,7 @@ class Model extends \FluentPDO
     }
 
     /**
-     * auto set the time
-     *
-     * @return void
+     * auto set the time.
      */
     private function setTime()
     {

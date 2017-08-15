@@ -4,10 +4,13 @@ namespace Src\Model;
 
 use Firebase\JWT\JWT;
 use Src\Config;
+use Src\Validate\Validate;
 
 class Admin extends Model
 {
+    /** @var string jwt token vlaue */
     private $_jwt;
+    /** @var array root to string */
     private $_rootLevel = [
         '7' => 'Administrator',
         '6' => 'Super Man',
@@ -15,22 +18,33 @@ class Admin extends Model
         '4' => 'User',
     ];
 
-    /**
-     * the table's default field.
-     *
-     * @var array
-     */
+    /** @var Validate validate instance */
+    private $_validate;
+    /** @var array validate's default rules */
+    private $_rules = [
+        'require' => ['username', 'passwd'],
+        'length' => ['username' => '4,20', 'root' => '4,7'],
+    ];
+
+    /** @var array the table's default field. */
     protected $_default = [
         'root' => 4,
         'favicon' => 'http://',
     ];
 
+    /** @var string set creat time automtic */
     protected $_autoTime = 'create_at';
+    /** @var string set update time automtic */
     protected $_autoUpdate = 'update_at';
 
+    /**
+     * construct.
+     */
     public function __construct()
     {
         parent::__construct();
+        // construct validate
+        $this->_validate = new Validate($this, $this->_rules);
     }
 
     /**
@@ -72,29 +86,26 @@ class Admin extends Model
     public function signup($data)
     {
         // check data
-        if (!isset($data['username']) || empty($data['username']) ||
-            !isset($data['passwd']) || empty($data['passwd'])) {
-            throw new \Exception('', 400);
-        }
-
-        // if username has exist
-        if (!empty($this->from()->where('username', $data['username'])->fetch())) {
-            throw new \Exception('username has exist!', 422);
-        }
-
-        // password disagree
-        if ($data['passwd2'] !== $data['passwd']) {
-            throw new \Exception('password disagree!', 422);
-        }
+        $this->_validate->add([
+            'length' => ['passwd' => '6,20'],
+            'passcheck' => ['passwd', 'passwd2'],
+        ])->check($data);
 
         // password encry
         $data['passwd'] = password_hash($data['passwd'], PASSWORD_DEFAULT);
 
         try {
-            $res = $this->insertInto()->field()->values(array_merge($this->_default, $data))->execute();
-            if ($res) {
-                $info = $this->from()->where('username', $data['username'])->fetch();
+            // if username has exist
+            if (!empty($this->from()->where('username', $data['username'])->fetch())) {
+                throw new \Exception('username has exist!', 422);
+            }
+
+            // insert and get the new admin info
+            if (($res = $this->insertInto()->field()->values($data)->execute())) {
+                $info = $this->from()->where('id', $res)->fetch();
                 unset($info['passwd']);
+            } else {
+                throw new \Exception('insert failed', 500);
             }
         } catch (\PDOException $e) {
             // sql query error, default 422 error code
@@ -114,10 +125,7 @@ class Admin extends Model
     public function login($data)
     {
         // data exist
-        if (!isset($data['username']) || empty($data['username']) ||
-            !isset($data['passwd']) || empty($data['passwd'])) {
-            throw new \Exception('', 400);
-        }
+        $this->_validate->check($data);
         // get real data
         $res = $this->from()->where('username', $data['username'])->fetch();
 

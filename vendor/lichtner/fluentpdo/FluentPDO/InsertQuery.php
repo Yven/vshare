@@ -83,6 +83,10 @@ class InsertQuery extends BaseQuery
                 }
             }
         }
+        // set default value
+        // if (!empty($values)) {
+            // $values = array_merge($this->getFPDO()->getDefault(), $values);
+        // }
 
         if (!is_array($values)) {
             throw new Exception('Param VALUES for INSERT query must be array');
