@@ -76,6 +76,8 @@ class BaseAction
             foreach ($cookie->toHeaders() as $c) {
                 $this->_response = $this->_response->withAddedHeader('Set-Cookie', $c);
             }
+        } else {
+            $this->_response = $this->_response->withAddedHeader('Set-Cookie', $value);
         }
     }
 

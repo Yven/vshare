@@ -51,6 +51,12 @@ class Validate
         return $this;
     }
 
+    /**
+     * check data by rule
+     *
+     * @param array $data
+     * @return void
+     */
     public function check($data)
     {
         var_dump($this->_rules);
