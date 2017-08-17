@@ -4,7 +4,7 @@ namespace Src\Action;
 
 use Src\Model\Admin;
 
-class AdminAction extends BaseAction
+class AdminAction extends Action
 {
     private $_admin;
 
@@ -88,6 +88,28 @@ class AdminAction extends BaseAction
         try {
             $res = $this->_admin->getInfo($this->_container['cookie']->get('token'));
         } catch (\Expcetion $e) {
+            return $this->error(
+                $e->getCode(),
+                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
+            );
+        }
+
+        return $this->success($res);
+    }
+
+    /**
+     * edit admin info
+     *
+     * @param Request $requrest
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
+    public function editInfo($requrest, $response, $args)
+    {
+        try {
+            $res = $this->_admin->editInfo($args['id'], $request->getParsedBody());
+        } catch (\Exception $e) {
             return $this->error(
                 $e->getCode(),
                 empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()

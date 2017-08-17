@@ -2,7 +2,7 @@
 
 namespace Src\Action;
 
-class BaseAction
+class Action
 {
     /**
      * 默认错误响应体信息.

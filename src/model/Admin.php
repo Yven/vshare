@@ -25,6 +25,10 @@ class Admin extends Model
         'require' => ['username', 'passwd'],
         'length' => ['username' => '4,20', 'root' => '4,7'],
     ];
+    private $_customRule = [
+        'passwdL' => '6,20',
+        'usernameL' => '4,20'
+    ];
 
     /** @var array the table's default field. */
     protected $_default = [
@@ -177,5 +181,16 @@ class Admin extends Model
         $res['root'] = $jwt['logInAs'];
 
         return $res;
+    }
+
+    public function editInfo($id, $data)
+    {
+        if (!is_numeric($id)) {
+            throw new \Exception('', 422);
+        }
+
+        $this->_validate->reset([
+            'length' => ['username' => $this->_customRule['usernameL'], 'passwd' => $this->_customRule['passwdL']],
+        ])->check($data);
     }
 }

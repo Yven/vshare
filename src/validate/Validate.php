@@ -141,6 +141,10 @@ class Validate
         return true;
     }
 
+    private function email($rule, $data)
+    {
+    }
+
     /**
      * call undefine function
      *
