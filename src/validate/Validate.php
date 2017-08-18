@@ -103,12 +103,12 @@ class Validate
     private function passcheck($rule, $data)
     {
         if (array_key_exists($rule[0], $data) && array_key_exists($rule[1], $data)) {
-            if ($data[$rule[0]] === $data[$rule[1]]) {
-                return true;
+            if ($data[$rule[0]] !== $data[$rule[1]]) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -122,27 +122,42 @@ class Validate
     private function length($rule, $data)
     {
         foreach ($rule as $key => $value) {
-            if (!array_key_exists($key, $data)) {
-                return false;
-            }
-            // the number that value between with
-            $bwt = explode(',', $value);
-            // data's value
-            $len = $data[$key];
-            // string's length
-            if (is_string($data[$key])) {
-                $len = strlen($data[$key]);
-            }
-            if ($len < (int) $bwt[0] || $len > (int) $bwt[1]) {
-                return false;
+            if (array_key_exists($key, $data)) {
+                // the number that value between with
+                $bwt = explode(',', $value);
+                // data's value
+                $len = $data[$key];
+                // string's length
+                if (is_string($data[$key])) {
+                    $len = strlen($data[$key]);
+                }
+                if ($len < (int) $bwt[0] || $len > (int) $bwt[1]) {
+                    return false;
+                }
             }
         }
 
         return true;
     }
 
+    /**
+     * email check
+     *
+     * @param array $rule
+     * @param array $data
+     * @return boolean
+     */
     private function email($rule, $data)
     {
+        foreach ($rule as $value) {
+            if (!array_key_exists($value, $data)) {
+                if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

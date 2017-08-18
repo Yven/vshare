@@ -25,9 +25,10 @@ class Admin extends Model
         'require' => ['username', 'passwd'],
         'length' => ['username' => '4,20', 'root' => '4,7'],
     ];
-    private $_customRule = [
-        'passwdL' => '6,20',
-        'usernameL' => '4,20'
+
+    private $_length= [
+        'passwd' => '6,20',
+        'username' => '4,20'
     ];
 
     /** @var array the table's default field. */
@@ -190,7 +191,8 @@ class Admin extends Model
         }
 
         $this->_validate->reset([
-            'length' => ['username' => $this->_customRule['usernameL'], 'passwd' => $this->_customRule['passwdL']],
+            'length' => ['username' => $this->_length['username'], 'passwd' => $this->_length['passwd']],
+            'email' => ['email']
         ])->check($data);
     }
 }
