@@ -59,7 +59,7 @@ class Validate
      */
     public function check($data)
     {
-        var_dump($this->_rules);
+        // var_dump($this->_rules);
         // merge the default value and data
         if (!empty($data)) {
             $data = array_merge($this->_model->getDefault(), $data);
@@ -68,7 +68,7 @@ class Validate
         // search rule's function
         foreach ($this->_rules as $key => $value) {
             if (!$this->{$key}($value, $data)) {
-                throw new \Exception($key.': field error!', 422);
+                throw new \Exception(implode(' or ', array_keys($value)).' '.$key.': field error!', 422);
             }
         }
     }
@@ -150,8 +150,8 @@ class Validate
     private function email($rule, $data)
     {
         foreach ($rule as $value) {
-            if (!array_key_exists($value, $data)) {
-                if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            if (array_key_exists($value, $data)) {
+                if (false === filter_var($data[$value], FILTER_VALIDATE_EMAIL)) {
                     return false;
                 }
             }

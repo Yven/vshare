@@ -21,6 +21,7 @@ $container['csrf'] = function ($c) {
         $request = $request->withAttribute('csrf_status', false);
 
         return $next($request, $response);
+        // return $response->withJson('csrf validate failed', 400);
     });
 
     return $guard;

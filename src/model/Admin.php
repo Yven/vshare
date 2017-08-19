@@ -194,5 +194,7 @@ class Admin extends Model
             'length' => ['username' => $this->_length['username'], 'passwd' => $this->_length['passwd']],
             'email' => ['email']
         ])->check($data);
+
+        return "ok";
     }
 }

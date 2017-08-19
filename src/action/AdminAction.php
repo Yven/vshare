@@ -11,7 +11,7 @@ class AdminAction extends Action
     protected $_container;
 
     /**
-     * construct
+     * construct.
      *
      * @param \Slim\Container $container
      */
@@ -39,7 +39,7 @@ class AdminAction extends Action
         } catch (\Exception $e) {
             return $this->error(
                 $e->getCode(),
-                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
+                empty($e->getMessage()) ? $this->_ERR_MSG[$e->getCode()] : $e->getMessage()
             );
         }
 
@@ -63,7 +63,7 @@ class AdminAction extends Action
         } catch (\Exception $e) {
             return $this->error(
                 $e->getCode(),
-                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
+                empty($e->getMessage()) ? $this->_ERR_MSG[$e->getCode()] : $e->getMessage()
             );
         }
 
@@ -90,7 +90,7 @@ class AdminAction extends Action
         } catch (\Expcetion $e) {
             return $this->error(
                 $e->getCode(),
-                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
+                empty($e->getMessage()) ? $this->_ERR_MSG[$e->getCode()] : $e->getMessage()
             );
         }
 
@@ -98,24 +98,34 @@ class AdminAction extends Action
     }
 
     /**
-     * edit admin info
+     * edit admin info.
      *
-     * @param Request $requrest
+     * @param Request  $requrest
      * @param Response $response
-     * @param array $args
+     * @param array    $args
+     *
      * @return Response
      */
-    public function editInfo($requrest, $response, $args)
+    public function editInfo($request, $response, $args)
     {
+        // TODO
+        if (false === $request->getAttribute('csrf_status')) {
+            return $this->error(401,$this->_ERR_MSG[401]);
+        }
+
         try {
             $res = $this->_admin->editInfo($args['id'], $request->getParsedBody());
         } catch (\Exception $e) {
             return $this->error(
                 $e->getCode(),
-                empty($e->getMessage()) ? $this->_ERR_MSG[$status['code']] : $e->getMessage()
+                empty($e->getMessage()) ? $this->_ERR_MSG[$e->getCode()] : $e->getMessage()
             );
         }
 
         return $this->success($res);
+    }
+
+    public function permissionCheck()
+    {
     }
 }
